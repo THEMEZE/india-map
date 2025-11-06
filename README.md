@@ -1,5 +1,10 @@
 # india-map
 
+```
+https://themeze.github.io/india-map/index.html
+```
+
+
 # 🎯 Objectif
 
 Créer une **mini-page** web élégante qui affiche ta carte `map.html`
