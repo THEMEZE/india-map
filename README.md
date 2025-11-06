@@ -42,7 +42,7 @@ india-map/
 </html>
 ```
 
-🎨 2. Fichier `style.css``
+🎨 2. Fichier `style.css`
 
 ```css
 /* --- Style global --- */
