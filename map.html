@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_8c861312bbbf91c05cb985ae31f0d33f {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+        
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/leaflet.markercluster.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/MarkerCluster.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/MarkerCluster.Default.css"/>
+    <script src="https://cdn.jsdelivr.net/gh/python-visualization/folium@main/folium/templates/leaflet_heat.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-minimap/3.6.1/Control.MiniMap.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet-minimap/3.6.1/Control.MiniMap.css"/>
+</head>
+<body>
+    
+    
+<div style="
+    position: fixed; 
+    bottom: 30px; left: 30px; width: 230px; 
+    background-color: white;
+    border: 2px solid grey;
+    z-index: 9999; 
+    font-size: 14px;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+    border-radius: 10px;
+    padding: 10px;
+">
+    <h4 style="margin-top:0; text-align:center;">🗺️ Légende</h4>
+    <p><i style="color:#ff6600;">▭</i>  Frontières de l’Inde</p>
+    <p><i style="color:red;">▬ ▬ ▬</i>  Itinéraire principal</p>
+    <p><i style="color:blue;" class="fa fa-map-marker"></i>  Villes principales</p>
+    <p><i style="background:linear-gradient(to right, yellow, red); 
+                padding:2px 10px; border-radius:3px;"></i>  Densité de population (carte de chaleur)</p>
+    <p><b>🛰️ Fond satellite</b> ou <b>🗺️ Fond clair</b> disponibles</p>
+</div>
+    
+            <div class="folium-map" id="map_8c861312bbbf91c05cb985ae31f0d33f" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_8c861312bbbf91c05cb985ae31f0d33f = L.map(
+                "map_8c861312bbbf91c05cb985ae31f0d33f",
+                {
+                    center: [22.97, 78.65],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 5,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_b365f838ec32b524525078281c0aaa0e = L.tileLayer(
+                "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+                {"attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"https://carto.com/attributions\"\u003eCARTO\u003c/a\u003e", "detectRetina": false, "maxNativeZoom": 20, "maxZoom": 20, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abcd", "tms": false}
+            );
+        
+    
+            tile_layer_b365f838ec32b524525078281c0aaa0e.addTo(map_8c861312bbbf91c05cb985ae31f0d33f);
+        
+    
+            var tile_layer_9c238762a68db60c1548a43eff2fdf2b = L.tileLayer(
+                "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+                {"attribution": "Tiles \u0026copy; Esri \u0026mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community", "detectRetina": false, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            );
+        
+    
+            tile_layer_9c238762a68db60c1548a43eff2fdf2b.addTo(map_8c861312bbbf91c05cb985ae31f0d33f);
+        
+    
+            var marker_cluster_09492629a7b1af955bb62b375d6b2a40 = L.markerClusterGroup(
+                {}
+            );
+        
+    
+            var marker_120ca46ebf414313fdd209a03aa86adb = L.marker(
+                [28.61, 77.23],
+                {}
+            ).addTo(marker_cluster_09492629a7b1af955bb62b375d6b2a40);
+        
+    
+            var icon_f356288c0033f9e56eb8b57cec3b4291 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_120ca46ebf414313fdd209a03aa86adb.setIcon(icon_f356288c0033f9e56eb8b57cec3b4291);
+        
+    
+        var popup_81e1e56643dca1c59a0538d6c51faba5 = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_c80366e331febdd3ffe3e5205e33796c = $(`<div id="html_c80366e331febdd3ffe3e5205e33796c" style="width: 100.0%; height: 100.0%;">     <b>New Delhi</b><br>     <i>Capitale de l'Inde</i><br>     Population : 33,000,000 habitants     </div>`)[0];
+                popup_81e1e56643dca1c59a0538d6c51faba5.setContent(html_c80366e331febdd3ffe3e5205e33796c);
+            
+        
+
+        marker_120ca46ebf414313fdd209a03aa86adb.bindPopup(popup_81e1e56643dca1c59a0538d6c51faba5)
+        ;
+
+        
+    
+    
+            marker_120ca46ebf414313fdd209a03aa86adb.bindTooltip(
+                `<div>
+                     New Delhi
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_ddaf7d41acdb9fd2ccc23000fcb337f9 = L.marker(
+                [19.07, 72.87],
+                {}
+            ).addTo(marker_cluster_09492629a7b1af955bb62b375d6b2a40);
+        
+    
+            var icon_843fe45c7a6c3b84e203c49f49d5fa9f = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_ddaf7d41acdb9fd2ccc23000fcb337f9.setIcon(icon_843fe45c7a6c3b84e203c49f49d5fa9f);
+        
+    
+        var popup_248107783a4cba56f653f236c645b8e0 = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_c97182ecec5913221c0deb2e01c8550f = $(`<div id="html_c97182ecec5913221c0deb2e01c8550f" style="width: 100.0%; height: 100.0%;">     <b>Mumbai</b><br>     <i>Centre économique</i><br>     Population : 25,000,000 habitants     </div>`)[0];
+                popup_248107783a4cba56f653f236c645b8e0.setContent(html_c97182ecec5913221c0deb2e01c8550f);
+            
+        
+
+        marker_ddaf7d41acdb9fd2ccc23000fcb337f9.bindPopup(popup_248107783a4cba56f653f236c645b8e0)
+        ;
+
+        
+    
+    
+            marker_ddaf7d41acdb9fd2ccc23000fcb337f9.bindTooltip(
+                `<div>
+                     Mumbai
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_6a0d25b8ddcc90d73e7a0b46424e63b3 = L.marker(
+                [12.97, 77.59],
+                {}
+            ).addTo(marker_cluster_09492629a7b1af955bb62b375d6b2a40);
+        
+    
+            var icon_a84ce5eb1b1b0bbe7b11c5bec8c6cf2e = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_6a0d25b8ddcc90d73e7a0b46424e63b3.setIcon(icon_a84ce5eb1b1b0bbe7b11c5bec8c6cf2e);
+        
+    
+        var popup_2fe3ab0ddd155f5648a08c7c84c64310 = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_8c386ef37822f856f4a017351883630c = $(`<div id="html_8c386ef37822f856f4a017351883630c" style="width: 100.0%; height: 100.0%;">     <b>Bangalore</b><br>     <i>Technologie et innovation</i><br>     Population : 13,000,000 habitants     </div>`)[0];
+                popup_2fe3ab0ddd155f5648a08c7c84c64310.setContent(html_8c386ef37822f856f4a017351883630c);
+            
+        
+
+        marker_6a0d25b8ddcc90d73e7a0b46424e63b3.bindPopup(popup_2fe3ab0ddd155f5648a08c7c84c64310)
+        ;
+
+        
+    
+    
+            marker_6a0d25b8ddcc90d73e7a0b46424e63b3.bindTooltip(
+                `<div>
+                     Bangalore
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_d44ad7d60e7f81cadc97c6201f94903b = L.marker(
+                [13.08, 80.27],
+                {}
+            ).addTo(marker_cluster_09492629a7b1af955bb62b375d6b2a40);
+        
+    
+            var icon_1b8d45eb84e7bb2d9f566f679fc90002 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_d44ad7d60e7f81cadc97c6201f94903b.setIcon(icon_1b8d45eb84e7bb2d9f566f679fc90002);
+        
+    
+        var popup_ac9fb95e6cc9713a644e94283980ab9e = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_5e1ebde295fc72b48d9e1588bb9a3ba6 = $(`<div id="html_5e1ebde295fc72b48d9e1588bb9a3ba6" style="width: 100.0%; height: 100.0%;">     <b>Chennai</b><br>     <i>Ville portuaire du sud</i><br>     Population : 11,000,000 habitants     </div>`)[0];
+                popup_ac9fb95e6cc9713a644e94283980ab9e.setContent(html_5e1ebde295fc72b48d9e1588bb9a3ba6);
+            
+        
+
+        marker_d44ad7d60e7f81cadc97c6201f94903b.bindPopup(popup_ac9fb95e6cc9713a644e94283980ab9e)
+        ;
+
+        
+    
+    
+            marker_d44ad7d60e7f81cadc97c6201f94903b.bindTooltip(
+                `<div>
+                     Chennai
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_76c021ff55fb0b19bec2e24359b8f153 = L.marker(
+                [22.57, 88.36],
+                {}
+            ).addTo(marker_cluster_09492629a7b1af955bb62b375d6b2a40);
+        
+    
+            var icon_dbac17fb6536b7d8718c6af31ca19bf1 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_76c021ff55fb0b19bec2e24359b8f153.setIcon(icon_dbac17fb6536b7d8718c6af31ca19bf1);
+        
+    
+        var popup_00d49823fec8a0f31deb7415aa30f446 = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_6bbe5eb56e3b788330adda4e700321ad = $(`<div id="html_6bbe5eb56e3b788330adda4e700321ad" style="width: 100.0%; height: 100.0%;">     <b>Kolkata</b><br>     <i>Ancienne capitale coloniale</i><br>     Population : 14,000,000 habitants     </div>`)[0];
+                popup_00d49823fec8a0f31deb7415aa30f446.setContent(html_6bbe5eb56e3b788330adda4e700321ad);
+            
+        
+
+        marker_76c021ff55fb0b19bec2e24359b8f153.bindPopup(popup_00d49823fec8a0f31deb7415aa30f446)
+        ;
+
+        
+    
+    
+            marker_76c021ff55fb0b19bec2e24359b8f153.bindTooltip(
+                `<div>
+                     Kolkata
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_e924f5cfba5d5e59ffc1da668157bd92 = L.marker(
+                [17.38, 78.48],
+                {}
+            ).addTo(marker_cluster_09492629a7b1af955bb62b375d6b2a40);
+        
+    
+            var icon_70566846b3b117b779831830d02dba44 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_e924f5cfba5d5e59ffc1da668157bd92.setIcon(icon_70566846b3b117b779831830d02dba44);
+        
+    
+        var popup_71c8568519bc9fbc5b09203d21670607 = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_84fba6bbd7dbc881acf9da2fd3a7b237 = $(`<div id="html_84fba6bbd7dbc881acf9da2fd3a7b237" style="width: 100.0%; height: 100.0%;">     <b>Hyderabad</b><br>     <i>Technopôle en pleine croissance</i><br>     Population : 12,000,000 habitants     </div>`)[0];
+                popup_71c8568519bc9fbc5b09203d21670607.setContent(html_84fba6bbd7dbc881acf9da2fd3a7b237);
+            
+        
+
+        marker_e924f5cfba5d5e59ffc1da668157bd92.bindPopup(popup_71c8568519bc9fbc5b09203d21670607)
+        ;
+
+        
+    
+    
+            marker_e924f5cfba5d5e59ffc1da668157bd92.bindTooltip(
+                `<div>
+                     Hyderabad
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            marker_cluster_09492629a7b1af955bb62b375d6b2a40.addTo(map_8c861312bbbf91c05cb985ae31f0d33f);
+        
+    
+            var heat_map_d4d761acf06ca8c51bcbdca65ca91cee = L.heatLayer(
+                [[28.61, 77.23, 3.3], [19.07, 72.87, 2.5], [12.97, 77.59, 1.3], [13.08, 80.27, 1.1], [22.57, 88.36, 1.4], [17.38, 78.48, 1.2]],
+                {"blur": 15, "maxZoom": 18, "minOpacity": 0.5, "radius": 25}
+            );
+        
+    
+            heat_map_d4d761acf06ca8c51bcbdca65ca91cee.addTo(map_8c861312bbbf91c05cb985ae31f0d33f);
+        
+    
+        function geo_json_096adf716630be46f3b0c8a6fa202684_styler(feature) {
+            switch(feature.id) {
+                default:
+                    return {"color": "#ff6600", "fillColor": "#00000000", "fillOpacity": 0.1, "weight": 2};
+            }
+        }
+
+        function geo_json_096adf716630be46f3b0c8a6fa202684_onEachFeature(feature, layer) {
+            layer.on({
+            });
+        };
+        var geo_json_096adf716630be46f3b0c8a6fa202684 = L.geoJson(null, {
+                onEachFeature: geo_json_096adf716630be46f3b0c8a6fa202684_onEachFeature,
+            
+                style: geo_json_096adf716630be46f3b0c8a6fa202684_styler,
+        });
+
+        function geo_json_096adf716630be46f3b0c8a6fa202684_add (data) {
+            geo_json_096adf716630be46f3b0c8a6fa202684
+                .addData(data);
+        }
+            geo_json_096adf716630be46f3b0c8a6fa202684_add({"features": [{"geometry": {"coordinates": [[[77.837451, 35.49401], [78.912269, 34.321936], [78.811086, 33.506198], [79.208892, 32.994395], [79.176129, 32.48378], [78.458446, 32.618164], [78.738894, 31.515906], [79.721367, 30.882715], [81.111256, 30.183481], [80.476721, 29.729865], [80.088425, 28.79447], [81.057203, 28.416095], [81.999987, 27.925479], [83.304249, 27.364506], [84.675018, 27.234901], [85.251779, 26.726198], [86.024393, 26.630985], [87.227472, 26.397898], [88.060238, 26.414615], [88.174804, 26.810405], [88.043133, 27.445819], [88.120441, 27.876542], [88.730326, 28.086865], [88.814248, 27.299316], [88.835643, 27.098966], [89.744528, 26.719403], [90.373275, 26.875724], [91.217513, 26.808648], [92.033484, 26.83831], [92.103712, 27.452614], [91.696657, 27.771742], [92.503119, 27.896876], [93.413348, 28.640629], [94.56599, 29.277438], [95.404802, 29.031717], [96.117679, 29.452802], [96.586591, 28.83098], [96.248833, 28.411031], [97.327114, 28.261583], [97.402561, 27.882536], [97.051989, 27.699059], [97.133999, 27.083774], [96.419366, 27.264589], [95.124768, 26.573572], [95.155153, 26.001307], [94.603249, 25.162495], [94.552658, 24.675238], [94.106742, 23.850741], [93.325188, 24.078556], [93.286327, 23.043658], [93.060294, 22.703111], [93.166128, 22.27846], [92.672721, 22.041239], [92.146035, 23.627499], [91.869928, 23.624346], [91.706475, 22.985264], [91.158963, 23.503527], [91.46773, 24.072639], [91.915093, 24.130414], [92.376202, 24.976693], [91.799596, 25.147432], [90.872211, 25.132601], [89.920693, 25.26975], [89.832481, 25.965082], [89.355094, 26.014407], [88.563049, 26.446526], [88.209789, 25.768066], [88.931554, 25.238692], [88.306373, 24.866079], [88.084422, 24.501657], [88.69994, 24.233715], [88.52977, 23.631142], [88.876312, 22.879146], [89.031961, 22.055708], [88.888766, 21.690588], [88.208497, 21.703172], [86.975704, 21.495562], [87.033169, 20.743308], [86.499351, 20.151638], [85.060266, 19.478579], [83.941006, 18.30201], [83.189217, 17.671221], [82.192792, 17.016636], [82.191242, 16.556664], [81.692719, 16.310219], [80.791999, 15.951972], [80.324896, 15.899185], [80.025069, 15.136415], [80.233274, 13.835771], [80.286294, 13.006261], [79.862547, 12.056215], [79.857999, 10.357275], [79.340512, 10.308854], [78.885345, 9.546136], [79.18972, 9.216544], [78.277941, 8.933047], [77.941165, 8.252959], [77.539898, 7.965535], [76.592979, 8.899276], [76.130061, 10.29963], [75.746467, 11.308251], [75.396101, 11.781245], [74.864816, 12.741936], [74.616717, 13.992583], [74.443859, 14.617222], [73.534199, 15.990652], [73.119909, 17.92857], [72.820909, 19.208234], [72.824475, 20.419503], [72.630533, 21.356009], [71.175273, 20.757441], [70.470459, 20.877331], [69.16413, 22.089298], [69.644928, 22.450775], [69.349597, 22.84318], [68.176645, 23.691965], [68.842599, 24.359134], [71.04324, 24.356524], [70.844699, 25.215102], [70.282873, 25.722229], [70.168927, 26.491872], [69.514393, 26.940966], [70.616496, 27.989196], [71.777666, 27.91318], [72.823752, 28.961592], [73.450638, 29.976413], [74.42138, 30.979815], [74.405929, 31.692639], [75.258642, 32.271105], [74.451559, 32.7649], [74.104294, 33.441473], [73.749948, 34.317699], [74.240203, 34.748887], [75.757061, 34.504923], [76.871722, 34.653544], [77.837451, 35.49401]]], "type": "Polygon"}, "id": "IND", "properties": {"name": "India"}, "type": "Feature"}], "type": "FeatureCollection"});
+
+        
+    
+            geo_json_096adf716630be46f3b0c8a6fa202684.addTo(map_8c861312bbbf91c05cb985ae31f0d33f);
+        
+    
+            var poly_line_d4bc0f91601da54ac2b74315778327ae = L.polyline(
+                [[28.61, 77.23], [19.07, 72.87], [12.97, 77.59], [13.08, 80.27], [22.57, 88.36], [17.38, 78.48]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": "10", "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_8c861312bbbf91c05cb985ae31f0d33f);
+        
+    
+            poly_line_d4bc0f91601da54ac2b74315778327ae.bindTooltip(
+                `<div>
+                     Itinéraire principal entre les grandes villes
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var tile_layer_4efe8dbdcf3706efdc4468ffdb256efe = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors", "detectRetina": false, "maxNativeZoom": 19, "maxZoom": 19, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            );
+            var mini_map_d6be3552ed11d0af882d0cdfe46deac3 = new L.Control.MiniMap(
+                tile_layer_4efe8dbdcf3706efdc4468ffdb256efe,
+                {"autoToggleDisplay": false, "centerFixed": false, "collapsedHeight": 25, "collapsedWidth": 25, "height": 150, "minimized": false, "position": "bottomright", "toggleDisplay": true, "width": 150, "zoomAnimation": false, "zoomLevelOffset": -5}
+            );
+            map_8c861312bbbf91c05cb985ae31f0d33f.addControl(mini_map_d6be3552ed11d0af882d0cdfe46deac3);
+        
+    
+            var layer_control_682c28d027e764c552f8620777f439c2_layers = {
+                base_layers : {
+                    "Fond clair" : tile_layer_b365f838ec32b524525078281c0aaa0e,
+                    "Fond satellite" : tile_layer_9c238762a68db60c1548a43eff2fdf2b,
+                },
+                overlays :  {
+                    "Villes principales" : marker_cluster_09492629a7b1af955bb62b375d6b2a40,
+                    "Carte de chaleur" : heat_map_d4d761acf06ca8c51bcbdca65ca91cee,
+                    "Fronti\u00e8res de l\u0027Inde" : geo_json_096adf716630be46f3b0c8a6fa202684,
+                },
+            };
+            let layer_control_682c28d027e764c552f8620777f439c2 = L.control.layers(
+                layer_control_682c28d027e764c552f8620777f439c2_layers.base_layers,
+                layer_control_682c28d027e764c552f8620777f439c2_layers.overlays,
+                {"autoZIndex": true, "collapsed": false, "position": "topright"}
+            ).addTo(map_8c861312bbbf91c05cb985ae31f0d33f);
+
+        
+</script>
+</html>
